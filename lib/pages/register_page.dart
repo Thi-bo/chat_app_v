@@ -1,3 +1,4 @@
+import 'package:chat_app_v/auth/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:chat_app_v/components/myTextField.dart';
 import 'package:chat_app_v/components/my_button.dart';
@@ -78,7 +79,7 @@ class RegisterPage extends StatelessWidget {
             //login
             MyButton(
               text: "Register",
-              onTap: Register,
+              onTap: () => register(context),
             ),
             const SizedBox(
               height: 10,
@@ -112,5 +113,25 @@ class RegisterPage extends StatelessWidget {
     );
   }
 
-  void Register() {}
+  void register(BuildContext context) {
+    final _auth = AuthService();
+    if (_pwdController.text == _confimed_pwdController.text) {
+      try {
+        _auth.signUpWithEmailPassword(
+            _emailController.text, _pwdController.text);
+      } catch (e) {
+        showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+                  title: Text(e.toString()),
+                ));
+      }
+    } else {
+      showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+                title: Text("Passxord not math"),
+              ));
+    }
+  }
 }
